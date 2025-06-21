@@ -9,7 +9,7 @@ from ..async_command import async_command
 from ..binds import get_keymap, read_binds
 
 
-class Status(str, Enum):  # Inherit from str to allow string comparison
+class Status(str, Enum):
     ON = "on"
     OFF = "off"
 
