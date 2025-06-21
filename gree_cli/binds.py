@@ -41,9 +41,11 @@ class Bind(BaseModel):
         )
         device = Device(device_info=device_info)
         await device.bind(key=self.key, cipher=self.cipher())
-        device._transport, _ = await device._loop.create_datagram_endpoint(
-            lambda: device, remote_addr=(device.device_info.ip, device.device_info.port)
-        )
+        if device._transport is None:
+            device._transport, _ = await device._loop.create_datagram_endpoint(
+                lambda: device,
+                remote_addr=(device.device_info.ip, device.device_info.port),
+            )
         return device
 
 

@@ -33,20 +33,7 @@ wheels = [
 ]
 
 [[package]]
-name = "greeclimate"
-version = "2.1.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "netifaces" },
-    { name = "pycryptodome" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/1c/7f/2285faf50df3c6e67bfad181215593ec0663a5b9e0a135274c6b5687998f/greeclimate-2.1.0.tar.gz", hash = "sha256:fc97f70cf96006ae3f2bbf187a3a9251bcbd25c4c2a7bbf294fa2caf2f88bc57", size = 35167, upload-time = "2024-08-05T21:26:24.01Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/6e/f1/fc70d5d2f9a2ff82b7dcbdd05b7ebcdf5f4c80ef920ee4644d571fea3e4d/greeclimate-2.1.0-py3-none-any.whl", hash = "sha256:0c285f3d3347225e894027101fc0344fba2c2a04efc200b8aff7c8892ac1b522", size = 28417, upload-time = "2024-08-05T21:26:22.701Z" },
-]
-
-[[package]]
-name = "greeclimate-cli"
+name = "gree-cli"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
@@ -60,6 +47,19 @@ requires-dist = [
     { name = "greeclimate", specifier = ">=2.1.0" },
     { name = "pydantic", specifier = ">=2.11.7" },
     { name = "typer-slim", specifier = ">=0.16.0" },
+]
+
+[[package]]
+name = "greeclimate"
+version = "2.1.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "netifaces" },
+    { name = "pycryptodome" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/1c/7f/2285faf50df3c6e67bfad181215593ec0663a5b9e0a135274c6b5687998f/greeclimate-2.1.0.tar.gz", hash = "sha256:fc97f70cf96006ae3f2bbf187a3a9251bcbd25c4c2a7bbf294fa2caf2f88bc57", size = 35167, upload-time = "2024-08-05T21:26:24.01Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/6e/f1/fc70d5d2f9a2ff82b7dcbdd05b7ebcdf5f4c80ef920ee4644d571fea3e4d/greeclimate-2.1.0-py3-none-any.whl", hash = "sha256:0c285f3d3347225e894027101fc0344fba2c2a04efc200b8aff7c8892ac1b522", size = 28417, upload-time = "2024-08-05T21:26:22.701Z" },
 ]
 
 [[package]]

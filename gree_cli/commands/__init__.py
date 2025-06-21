@@ -1,5 +1,5 @@
 from .discover import discover
-from .set import set_command
+from .set_command import set_command
 
 __all__ = [
     "discover",
