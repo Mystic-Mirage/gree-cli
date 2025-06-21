@@ -1,10 +1,9 @@
-import asyncio
 from typing import Annotated
 
 import typer
 
 from ..async_command import async_command
-from ..binds import get_keymap, read_binds
+from ..binds import search_bind
 
 STATE_MAP = {
     False: "off",
@@ -27,18 +26,9 @@ async def get_command(
         typer.echo("Only a single option can be specified")
         raise typer.Exit(1)
 
-    binds = read_binds()
-    alias2bind_map = get_keymap("alias", binds)
-    name2bind_map = get_keymap("name", binds)
-    mac2bind_map = get_keymap("mac", binds)
-
-    bind = alias2bind_map.get(name) or name2bind_map.get(name) or mac2bind_map.get(name)
-    if bind:
+    if bind := search_bind(name):
         device = await bind.device()
-
-        await device.update_state()
-        while device.temperature_units is None:
-            await asyncio.sleep(0.1)
+        await device.update()
 
         if power:
             typer.echo(STATE_MAP[device.power])

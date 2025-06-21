@@ -1,4 +1,3 @@
-import asyncio
 from enum import Enum
 from typing import Annotated
 
@@ -6,7 +5,7 @@ import typer
 from greeclimate.device import Mode as DeviceMode
 
 from ..async_command import async_command
-from ..binds import get_keymap, read_binds
+from ..binds import search_bind
 
 
 class Status(str, Enum):
@@ -40,13 +39,7 @@ async def set_command(
     light: Annotated[Status | None, typer.Option()] = None,
     power_save: Annotated[Status | None, typer.Option()] = None,
 ) -> None:
-    binds = read_binds()
-    alias2bind_map = get_keymap("alias", binds)
-    name2bind_map = get_keymap("name", binds)
-    mac2bind_map = get_keymap("mac", binds)
-
-    bind = alias2bind_map.get(name) or name2bind_map.get(name) or mac2bind_map.get(name)
-    if bind:
+    if bind := search_bind(name):
         device = await bind.device()
 
         if power:
@@ -54,9 +47,7 @@ async def set_command(
         if mode:
             device.mode = MODE_MAP[mode]
         if target_temperature is not None:
-            await device.update_state()
-            while device.temperature_units is None:
-                await asyncio.sleep(0.1)
+            await device.update()
             device.target_temperature = target_temperature
         if light:
             device.light = light == Status.ON

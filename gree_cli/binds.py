@@ -1,3 +1,4 @@
+import asyncio
 from configparser import ConfigParser
 from pathlib import Path
 
@@ -5,6 +6,25 @@ from greeclimate.cipher import CipherBase, CipherV1, CipherV2
 from greeclimate.device import Device
 from greeclimate.deviceinfo import DeviceInfo
 from pydantic import BaseModel, TypeAdapter, field_validator
+
+
+class BindDevice(Device):
+    async def bind(
+        self,
+        key: str = None,
+        cipher: CipherV1 | CipherV2 | None = None,
+    ) -> None:
+        await super().bind(key=key, cipher=cipher)
+        if self._transport is None:
+            self._transport, _ = await self._loop.create_datagram_endpoint(
+                lambda: self,
+                remote_addr=(self.device_info.ip, self.device_info.port),
+            )
+
+    async def update(self) -> None:
+        await self.update_state()
+        while self.temperature_units is None:
+            await asyncio.sleep(0.1)
 
 
 class Bind(BaseModel):
@@ -29,7 +49,7 @@ class Bind(BaseModel):
             cipher for cipher in CipherBase.__subclasses__() if cipher.__name__ == value
         )
 
-    async def device(self) -> Device:
+    async def device(self) -> BindDevice:
         device_info = DeviceInfo(
             ip=self.ip,
             port=self.port,
@@ -39,13 +59,8 @@ class Bind(BaseModel):
             model=self.model,
             version=self.version,
         )
-        device = Device(device_info=device_info)
-        await device.bind(key=self.key, cipher=self.cipher())
-        if device._transport is None:
-            device._transport, _ = await device._loop.create_datagram_endpoint(
-                lambda: device,
-                remote_addr=(device.device_info.ip, device.device_info.port),
-            )
+        device = BindDevice(device_info=device_info)
+        await device.bind(self.key, self.cipher())
         return device
 
 
@@ -83,3 +98,18 @@ def write_binds(binds: list[Device], path: str = "gree_binds.ini") -> None:
 
     with Path(path).open("w") as f:
         config.write(f)
+
+
+def search_bind(name: str) -> Bind | None:
+    binds = read_binds()
+
+    alias2bind_map = get_keymap("alias", binds)
+    name2bind_map = get_keymap("name", binds)
+    mac2bind_map = get_keymap("mac", binds)
+
+    return (
+        alias2bind_map.get(name)
+        or name2bind_map.get(name)
+        or mac2bind_map.get(name)
+        or None
+    )
