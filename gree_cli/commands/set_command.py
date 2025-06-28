@@ -1,10 +1,8 @@
 from enum import Enum
-from typing import Annotated
 
-import typer
 from greeclimate.device import Mode as DeviceMode
 
-from ..async_command import async_command
+from ..app import app
 from ..binds import search_bind
 
 
@@ -30,14 +28,14 @@ MODE_MAP = {
 }
 
 
-@async_command("set")
+@app.command(name="set")
 async def set_command(
     name: str,
-    power: Annotated[Status | None, typer.Option()] = None,
-    mode: Annotated[Mode | None, typer.Option()] = None,
-    target_temperature: Annotated[int | None, typer.Option()] = None,
-    light: Annotated[Status | None, typer.Option()] = None,
-    power_save: Annotated[Status | None, typer.Option()] = None,
+    power: Status | None = None,
+    mode: Mode | None = None,
+    target_temperature: int | None = None,
+    light: Status | None = None,
+    power_save: Status | None = None,
 ) -> None:
     if bind := search_bind(name):
         device = await bind.device()

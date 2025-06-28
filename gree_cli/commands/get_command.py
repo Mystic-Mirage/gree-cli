@@ -1,8 +1,9 @@
+import sys
 from typing import Annotated
 
-import typer
+from cyclopts import Parameter
 
-from ..async_command import async_command
+from ..app import app
 from ..binds import search_bind
 
 STATE_MAP = {
@@ -11,26 +12,31 @@ STATE_MAP = {
 }
 
 
-@async_command("get")
+@app.command(name="get")
 async def get_command(
     name: str,
-    power: Annotated[bool, typer.Option("--power")] = False,
-    current_temperature: Annotated[bool, typer.Option("--current-temperature")] = False,
+    power: Annotated[bool, Parameter("--power", negative="")] = False,
+    current_temperature: Annotated[
+        bool, Parameter("--current-temperature", negative="")
+    ] = False,
 ) -> None:
 
     commands = [
         power,
         current_temperature,
     ]
-    if sum(commands) > 1:
-        typer.echo("Only a single option can be specified")
-        raise typer.Exit(1)
+    if not any(commands):
+        print("At least one option must be specified")
+        sys.exit(1)
+    elif sum(commands) > 1:
+        print("Only a single option can be specified")
+        sys.exit(1)
 
     if bind := search_bind(name):
         device = await bind.device()
         await device.update()
 
         if power:
-            typer.echo(STATE_MAP[device.power])
+            print(STATE_MAP[device.power])
         elif current_temperature:
-            typer.echo(device.current_temperature)
+            print(device.current_temperature)

@@ -4,9 +4,9 @@ version = "0.1.0"
 description = "Add your description here"
 requires-python = ">=3.13"
 dependencies = [
+    "cyclopts>=3.21.0",
     "greeclimate>=2.1.0",
     "pydantic>=2.11.7",
-    "typer-slim>=0.16.0",
 ]
 
 [project.scripts]

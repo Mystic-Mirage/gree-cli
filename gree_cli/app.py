@@ -1,3 +1,3 @@
-import typer
+import cyclopts
 
-app = typer.Typer()
+app = cyclopts.App("gree", version_flags="")
