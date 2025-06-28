@@ -31,6 +31,7 @@ MODE_MAP = {
 @app.command(name="set")
 async def set_command(
     name: str,
+    /,
     power: Status | None = None,
     mode: Mode | None = None,
     target_temperature: int | None = None,

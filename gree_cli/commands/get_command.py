@@ -15,6 +15,7 @@ STATE_MAP = {
 @app.command(name="get")
 async def get_command(
     name: str,
+    /,
     power: Annotated[bool, Parameter("--power", negative="")] = False,
     current_temperature: Annotated[
         bool, Parameter("--current-temperature", negative="")
