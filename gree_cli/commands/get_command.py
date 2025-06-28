@@ -16,10 +16,8 @@ STATE_MAP = {
 async def get_command(
     name: str,
     /,
-    power: Annotated[bool, Parameter("--power", negative="")] = False,
-    current_temperature: Annotated[
-        bool, Parameter("--current-temperature", negative="")
-    ] = False,
+    power: Annotated[bool, Parameter(negative="")] = False,
+    current_temperature: Annotated[bool, Parameter(negative="")] = False,
 ) -> None:
 
     commands = [
