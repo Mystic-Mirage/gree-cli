@@ -36,7 +36,7 @@ class Bind(BaseModel):
     model: str
     version: str
     key: str
-    cipher: CipherV1 | CipherV2
+    cipher: type[CipherV1] | type[CipherV2]
     alias: str = ""
 
     model_config = {"arbitrary_types_allowed": True}
