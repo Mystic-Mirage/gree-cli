@@ -14,7 +14,7 @@ from ..binds import write_binds
 async def discover(
     *,
     wait: int = 5,
-    bind: Annotated[bool, Parameter("--bind", negative="")] = False,
+    bind: Annotated[bool, Parameter(negative="", show_default=False)] = False,
 ) -> None:
     discovery = Discovery()
 
